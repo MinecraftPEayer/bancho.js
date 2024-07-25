@@ -43,7 +43,7 @@ app.use(async (req, res, next) => {
         let routeModule = await import(`./${routes[route]}?t=${Date.now()}`.replace('src/', ''));
         console.log(`[${method}] ${req.hostname}${route}`);
         if (routeModule.default[method]) {
-            if (method === 'POST' && req.headers['content-type'].includes('multipart/form-data')) {
+            if (method === 'POST' && req.headers['content-type']?.includes('multipart/form-data')) {
                 let upload = multer()
                 upload.none()(req, res, () => {
                     routeModule.default[method](req, res);
