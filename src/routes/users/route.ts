@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { Database } from "sqlite3";
-import { md5 } from 'js-md5'
+import { md5 } from "js-md5";
 
 export default {
     POST: (req: Request, res: Response) => {
@@ -22,7 +22,6 @@ export default {
         }
 
         let user = body.user;
-        let db = new Database(`${process.cwd()}/data/users.db`);
 
         if (user.username.length < 2 || user.username.length > 15) {
             return res
@@ -44,26 +43,6 @@ export default {
             return res.status(400).send(Buffer.from("Username not allowed"));
         }
 
-        db.all(
-            "SELECT username FROM accounts",
-            (
-                err,
-                rows: {
-                    id: string;
-                    username: string;
-                    user_email: string;
-                    password_md5: string;
-                }[]
-            ) => {
-                let unavailableUsername = rows.map((row) => row.username);
-                if (unavailableUsername.includes(user.username)) {
-                    return res
-                        .status(400)
-                        .send(Buffer.from("Username already taken"));
-                }
-            }
-        );
-
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(user.user_email)) {
             return res.status(400).send(Buffer.from("Invalid email"));
         }
@@ -84,8 +63,9 @@ export default {
             return res.status(400).send(Buffer.from("Password not allowed"));
         }
 
+        let db = new Database(`${process.cwd()}/data/users.db`);
         db.all(
-            "SELECT username FROM accounts",
+            "SELECT username, user_email FROM accounts",
             (
                 err,
                 rows: {
@@ -95,6 +75,10 @@ export default {
                     password_md5: string;
                 }[]
             ) => {
+                if (err) {
+                    return res.status(500).send(Buffer.from("Database error"));
+                }
+
                 let unavailableUsername = rows.map((row) => row.username);
                 if (unavailableUsername.includes(user.username)) {
                     return res
@@ -108,16 +92,15 @@ export default {
                         .status(400)
                         .send(Buffer.from("Email already taken"));
                 }
+
+                let password_md5 = md5(user.password);
+
+                db.run(
+                    "INSERT INTO accounts (username, user_email, password_md5) VALUES (?, ?, ?)",
+                    [user.username, user.user_email, password_md5]
+                );
+                res.send(Buffer.from("ok"));
             }
         );
-
-        // encode password to md5
-        let password_md5 = md5(user.password);
-
-        db.run(
-            "INSERT INTO accounts (id, username, user_email, password_md5) VALUES (?, ?, ?, ?)",
-            [2, user.username, user.user_email, password_md5]
-        );
-        res.send(Buffer.from("ok"));
     },
 };
