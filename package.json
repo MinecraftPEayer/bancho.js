@@ -1,0 +1,38 @@
+{
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "express-formidable": "^1.2.0",
+    "fs": "^0.0.1-security",
+    "https": "^1.0.0",
+    "js-md5": "^0.8.3",
+    "multer": "^1.4.5-lts.1",
+    "sqlite3": "^5.1.7",
+    "tsx": "^4.16.2",
+    "typescript": "^5.5.4",
+    "uuid": "^10.0.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/multer": "^1.4.11",
+    "@types/node": "^20.14.11",
+    "prettier": "^3.3.3"
+  },
+  "name": "banchojs",
+  "version": "0.0.1",
+  "description": "osu!bancho, but in JavaScript",
+  "main": "index.ts",
+  "scripts": {
+    "start": "powershell node_modules/.bin/tsx src/index.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MinecraftPEayer/bancho.js.git"
+  },
+  "author": "MinecraftPEayer",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MinecraftPEayer/bancho.js/issues"
+  },
+  "homepage": "https://github.com/MinecraftPEayer/bancho.js#readme"
+}

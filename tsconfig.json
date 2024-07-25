@@ -1,0 +1,30 @@
+{
+  "include": [
+      "src/**/*",
+      "types/**/*"
+  ],
+  "exclude": [
+      "node_modules/**/*"
+  ],
+  "compilerOptions": {
+      "paths": {
+          "@/*": ["./*"],
+          "@lib/*": ["./lib/*"],
+          "@types/*": ["../types/*"],
+          "@root/*": ["../*"]
+      },
+      "rootDir": "./src",
+      "baseUrl": "./src",
+      "outDir": "./dist",
+      "typeRoots": [
+          "./types/**/*",
+          "./node_modules/@types/**/*"
+      ],
+      "target": "ESNext",
+      "moduleResolution": "Node",
+      "module": "CommonJS",
+      "resolveJsonModule": true,
+      "skipLibCheck": true,
+      "esModuleInterop": true
+  }
+}
