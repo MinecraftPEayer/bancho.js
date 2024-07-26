@@ -1,5 +1,5 @@
 import osuTypes from "./enums/osuTypes";
-import { write_uleb128 } from "./mainLib";
+import { writeString } from "./packets";
 
 const writeType: { [key in osuTypes]: (value: any) => Buffer } = {
     [osuTypes.i8]: (value: any) => Buffer.from([value]),
@@ -45,12 +45,7 @@ const writeType: { [key in osuTypes]: (value: any) => Buffer } = {
         return buffer;
     },
 
-    [osuTypes.string]: (string: string) => {
-        if (string) {
-            let encoded = new TextEncoder().encode(string);
-            return Buffer.concat([Buffer.from('\x0b'), Buffer.from(write_uleb128(encoded.length)), Buffer.from(encoded)]);
-        } else return Buffer.from('\x00');
-    },
+    [osuTypes.string]: writeString,
     [osuTypes.i32Array]: (value: number[]) => {
         return Buffer.from('')
     },
