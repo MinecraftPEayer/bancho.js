@@ -27,7 +27,7 @@ export default {
         }
 
         if (process.env.DISALLOW_INGAME_REGISTER === "true") {
-            res.status(400).send({
+            return res.status(400).send({
                 form_error: {
                     user: {
                         password: [
