@@ -92,6 +92,12 @@ async function getAllowedClientVersions(osuStream: OsuStream): Promise<Set<Date>
     return allowedClientVersion;
 }
 
+function parseAdapterString(adapterString: string): [Array<string>, boolean] {
+    let RunningUnderWine = adapterString === 'runningunderwine';
+    let adapters = adapterString.slice(0, -1).split(".");
+    return [adapters, RunningUnderWine];
+}
+
 async function handleLogin(
     header: IncomingHttpHeaders,
     body: string,
@@ -120,6 +126,19 @@ async function handleLogin(
             body: Buffer.concat([
                 versionUpdate(),
                 loginReply(LoginFailureReason.OldClient)
+            ])
+        }
+    }
+
+    let [adapters, RunningUnderWine] = parseAdapterString(loginData.adapters_string);
+    if (!(RunningUnderWine || adapters.some(adapter => adapter))) {
+        return {
+            header: {
+                osu_token: 'empty-adapters'
+            },
+            body: Buffer.concat([
+                loginReply(LoginFailureReason.AuthenticationFailed),
+                notification(`${process.env.SERVER_DOMAIN}: Please restart your osu! and try again.`)
             ])
         }
     }

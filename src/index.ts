@@ -2,6 +2,9 @@ import express from "express";
 import multer from 'multer'
 import * as fs from "fs";
 import "dotenv/config";
+import MainApplication from "./lib/classes/MainApplication";
+
+process.app = new MainApplication();
 
 const app = express();
 
@@ -58,7 +61,6 @@ app.use(async (req, res, next) => {
 })
 
 import https from "https";
-
 const server = https.createServer(
     {
         cert: fs.readFileSync(
